@@ -21,5 +21,5 @@ add_subdirectory(src)
 add_subdirectory(tests)
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/libs/googletest/CMakeLists.txt)
-    add_subdirectory(googletest)
+    add_subdirectory(libs/googletest)
 endif()

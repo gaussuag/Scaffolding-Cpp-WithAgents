@@ -1,7 +1,3 @@
-if(NOT TARGET gtest)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/libs/googletest googlemock)
-endif()
-
 add_executable(${PROJECT_NAME}_tests 
     main_test.cpp
 )
