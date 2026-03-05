@@ -20,6 +20,8 @@ enable_testing()
 add_subdirectory(src)
 add_subdirectory(tests)
 
+#### AUTO-Generated: libs start ####
 if(EXISTS ${CMAKE_SOURCE_DIR}/libs/googletest/CMakeLists.txt)
     add_subdirectory(libs/googletest)
 endif()
+#### AUTO-Generated: libs end ####
