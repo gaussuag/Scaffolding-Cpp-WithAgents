@@ -26,4 +26,3 @@ if errorlevel 1 (
 
 echo.
 echo Build succeeded!
-echo Run: "%BUILD_DIR%\Debug\PlaygroundCpp.exe"

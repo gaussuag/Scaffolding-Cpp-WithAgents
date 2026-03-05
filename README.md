@@ -1,18 +1,18 @@
-# PlaygroundCpp
+# C++ Project Template
 
 C++ 项目模板，基于 CMake + GoogleTest
 
 ## 目录结构
 
 ```
-PlaygroundCpp/
+<PROJECT_NAME>/
 ├── CMakeLists.txt          # 根 CMake 配置
 ├── cmake/                  # CMake 工具模块
 ├── src/                    # 源代码
 ├── include/                # 头文件
 ├── libs/                   # 第三方库 (手动管理)
 │   └── googletest/         # 内置 GoogleTest
-├── tests/                  # 测试代码
+├── tests/                 # 测试代码
 ├── scripts/                # 构建脚本
 │   ├── build.bat           # Windows
 │   └── build.sh            # Linux/macOS
@@ -22,15 +22,16 @@ PlaygroundCpp/
 
 ## 快速开始
 
+### 配置项目名称
+
+```batch
+scripts\config.bat
+```
+
 ### Windows (VS2022)
 
 ```batch
 scripts\build.bat
-```
-
-运行程序:
-```batch
-build\Debug\PlaygroundCpp.exe
 ```
 
 ### Linux / macOS
@@ -38,11 +39,6 @@ build\Debug\PlaygroundCpp.exe
 ```bash
 chmod +x scripts/build.sh
 ./scripts/build.sh
-```
-
-运行程序:
-```bash
-./build/PlaygroundCpp
 ```
 
 ## 构建选项
