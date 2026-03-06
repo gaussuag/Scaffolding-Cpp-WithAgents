@@ -27,9 +27,10 @@ echo Configuring project: %NEW_NAME% v%NEW_VERSION%
 echo.
 
 set "ROOT_CMAKE=CMakeLists.txt"
+set "VCPKG_JSON=vcpkg.json"
 
 if not exist "%ROOT_CMAKE%" (
-    Error: CMakeLists.txt not found.
+    echo Error: CMakeLists.txt not found.
     exit /b 1
 )
 
@@ -40,13 +41,19 @@ if errorlevel 1 (
     exit /b 1
 )
 
+if exist "%VCPKG_JSON%" (
+    powershell -Command "$newName = '%NEW_NAME%'.ToLower().Replace(' ', '-').Replace('_', '-'); (Get-Content '%VCPKG_JSON%') -replace 'playground-cpp', $newName | Set-Content '%VCPKG_JSON%'"
+    if errorlevel 1 (
+        echo Warning: Failed to update vcpkg.json
+    )
+)
+
 echo.
 echo ========================================
 echo   Configuration Complete!
 echo ========================================
 echo.
 echo Project name: %NEW_NAME%
-echo Version: %NEW_VERSION%
 echo.
 echo Next steps:
 echo   1. Run: scripts\build.bat

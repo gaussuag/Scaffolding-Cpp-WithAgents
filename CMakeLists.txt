@@ -1,4 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
+
+if(NOT DEFINED VCPKG_ROOT)
+    set(VCPKG_ROOT "$ENV{VCPKG_ROOT}")
+endif()
+
+if(VCPKG_ROOT AND EXISTS "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+    set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain")
+    set(VCPKG_MANIFEST_MODE ON)
+endif()
+
 project(PlaygroundCpp VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -14,6 +24,10 @@ else()
 endif()
 
 include(cmake/CompilerOptions.cmake)
+
+if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/VcpkgDeps.cmake)
+    include(cmake/VcpkgDeps.cmake)
+endif()
 
 enable_testing()
 

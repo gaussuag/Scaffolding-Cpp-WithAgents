@@ -2,7 +2,10 @@ add_executable(${PROJECT_NAME}_tests
     main_test.cpp
 )
 
+target_link_vcpkg_deps(${PROJECT_NAME}_tests)
+
 target_link_libraries(${PROJECT_NAME}_tests 
+    PRIVATE
     gtest_main
     gmock
 )
