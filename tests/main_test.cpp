@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <concurrentqueue/concurrentqueue.h>
-#include <thread-pool/BS_thread_pool.hpp>
 #include <curl/curl.h>
 
 TEST(SampleTest, BasicAssertion) {
@@ -29,17 +28,6 @@ TEST(ConcurrentQueueTest, PushPop) {
     EXPECT_EQ(value, 3);
     
     EXPECT_FALSE(queue.try_dequeue(value));
-}
-
-TEST(ThreadPoolTest, SubmitTask) {
-    BS::thread_pool pool(2);
-    
-    auto result = pool.submit_task([]() {
-        return 42;
-    });
-    
-    EXPECT_EQ(result.get(), 42);
-    pool.wait();
 }
 
 TEST(CurlTest, Version) {

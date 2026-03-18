@@ -3,7 +3,6 @@
   "name": "playground-cpp",
   "version": "1.0.0",
   "dependencies": [
-    "curl",
-    "7zip"
+    "curl"
   ]
 }
