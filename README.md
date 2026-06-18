@@ -1,124 +1,87 @@
-# C++ Project Template
+# Scaffolding C++ With Agents
 
-C++ 项目模板，基于 CMake + vcpkg + GoogleTest
+这是一个用于 SDK 或 Windows 客户端开发的 CMake C++ 脚手架。当前版本把第三方依赖从 `libs/` 和 vcpkg 自动解析，收束为仓库内固化的 `third_party/<library>/` 包模型，优先保证可复现构建和依赖版本不可隐式升级。
 
 ## 目录结构
 
-```
-<PROJECT_NAME>/
-├── CMakeLists.txt              # 根 CMake 配置
-├── vcpkg.json                  # vcpkg 依赖清单
-├── cmake/                      # CMake 工具模块
-│   ├── CompilerOptions.cmake   # 编译器选项
-│   └── VcpkgDeps.cmake         # vcpkg 自动依赖管理
-├── src/                        # 源代码
-│   ├── CMakeLists.txt
-│   └── main.cpp
-├── include/                    # 头文件
-├── libs/                      # 第三方库 (手动管理)
-│   └── googletest/            # 内置 GoogleTest
-├── tests/                     # 测试代码
-│   ├── CMakeLists.txt
-│   └── main_test.cpp
-├── scripts/                   # 构建脚本
-│   ├── build.bat              # Windows 构建
-│   ├── config.bat             # 配置项目名称
-│   └── detect_libs.bat        # 自动检测 libs/ 目录
-├── docs/                      # 文档
-├── .gitignore
-└── README.md
-```
-
-## 特性
-
-- **CMake 构建系统** - 支持 Visual Studio 2022
-- **vcpkg 依赖管理** - Manifest 模式，自动安装依赖
-- **GoogleTest 单元测试** - 内置集成
-- **自动依赖链接** - 无需手动配置 vcpkg 依赖
-- **Debug/Release 自动切换** - 自动使用正确的 DLL
-
-## 快速开始
-
-### 前置条件
-
-1. 安装 [Visual Studio 2022](https://visualstudio.microsoft.com/)
-2. 安装 [vcpkg](https://github.com/microsoft/vcpkg)
-3. 设置环境变量 `VCPKG_ROOT` 指向 vcpkg 目录
-
-### 配置项目名称
-
-```batch
-scripts\config.bat
+```text
+Scaffolding-Cpp-WithAgents/
+|-- CMakeLists.txt
+|-- cmake/
+|   |-- CompilerOptions.cmake
+|   `-- third_party/
+|       |-- ThirdPartyPolicy.cmake
+|       `-- ThirdPartyPackages.cmake
+|-- docs/
+|   |-- architecture/project-structure.md
+|   `-- third_party/
+|       |-- AGENT_GUIDE.md
+|       |-- workflow.md
+|       `-- tools.md
+|-- scripts/
+|   |-- build.bat
+|   |-- build.sh
+|   `-- config.bat
+|-- src/
+|-- tests/
+|-- third_party/
+|   |-- README.md
+|   |-- concurrentqueue/
+|   `-- googletest/
+`-- tools/third_party/validate-third-party.ps1
 ```
 
-### 构建
+## 第三方依赖策略
 
-```batch
+- `third_party/<library>/` 是第三方依赖唯一固化目录。
+- 每个库必须提供 `THIRD_PARTY.yml`，记录 `version`、`revision`、`features`、`triplets`、`crt_linkage`、`dependencies`、`artifacts` 和 `update_policy`。
+- 每个库必须提供一个 `<Lib>Package.cmake`，导出 `ScaffoldingCpp::ThirdParty::<Lib>` target。
+- 正常构建禁止通过 vcpkg manifest、系统目录或本机 installed 目录隐式解析生产依赖。
+- `category: foundation` 且 `update_policy: frozen` 的依赖必须显式升级，依赖不满足时失败，不自动拉新版本。
+
+## 当前固化依赖
+
+- `concurrentqueue`：header-only，生产样例使用。
+- `googletest`：测试依赖，仅在 `BUILD_TESTING=ON` 时接入。
+
+## 构建
+
+Windows:
+
+```bat
 scripts\build.bat
-```
-
-### 构建 Release 版本
-
-```batch
 scripts\build.bat release
-```
-
-### 清理构建目录
-
-```batch
 scripts\build.bat clean
 ```
 
-### 运行测试
+Linux/macOS 或 Git Bash:
 
-```batch
-build\tests\Debug\PlaygroundCpp_tests.exe
+```bash
+./scripts/build.sh all
 ```
 
-## 添加依赖
+手动 CMake:
 
-在 `vcpkg.json` 的 `dependencies` 数组中添加包名：
-
-```json
-{
-  "dependencies": [
-    "curl",
-    "7zip"
-  ]
-}
+```bash
+cmake -S . -B build
+cmake --build build --config Debug
+ctest --test-dir build -C Debug --output-on-failure
 ```
 
-重新构建后，`cmake/VcpkgDeps.cmake` 会自动：
-1. 链接 vcpkg 包
-2. 设置 include 路径
-3. 复制 DLL 到输出目录
+## 校验第三方包结构
 
-## 添加新代码
-
-1. 源代码放 `src/`，头文件放 `include/`
-2. 修改 `src/CMakeLists.txt` 添加源文件
-3. 重新构建
-
-## 添加测试
-
-1. 测试代码放 `tests/`
-2. 修改 `tests/CMakeLists.txt` 添加测试文件
-3. 运行测试
-
-## libs/ 目录
-
-将 header-only 库放入 `libs/` 目录，每个库一个子目录：
-
-```
-libs/
-├── concurrentqueue/
-│   └── include/
-└── thread-pool/
-    └── include/
+```powershell
+.\tools\third_party\validate-third-party.ps1
 ```
 
-运行 `scripts\detect_libs.bat` 自动检测并配置。
+这个校验只管理 `third_party/` 自己的 scope：metadata、package CMake 入口、artifact 路径、依赖版本一致性和 Git LFS 规则。它不会对仓库中其他业务目录做额外限制。
 
-## 文档
+## 增加或升级第三方库
 
-- [vcpkg 依赖管理问题报告](docs/vcpkg-dependency-issues.md)
+1. 在 `third_party/<library>/` 下放入固化源码、头文件或二进制 artifact。
+2. 编写 `THIRD_PARTY.yml`，把版本、revision、features、triplet、CRT linkage、依赖和 artifact 清单写死。
+3. 编写 `<Lib>Package.cmake`，只导出 `ScaffoldingCpp::ThirdParty::<Lib>` target，不做下载、探测或自动升级。
+4. 在 `cmake/third_party/ThirdPartyPackages.cmake` 或需要该库的 feature gate 中 include 这个 package 文件。
+5. 运行 `tools/third_party/validate-third-party.ps1` 和 CMake 构建。
+
+详见 `docs/third_party/workflow.md`。

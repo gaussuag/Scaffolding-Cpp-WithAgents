@@ -1,0 +1,20 @@
+name: concurrentqueue
+display_name: ConcurrentQueue
+version: "vendored-2020"
+revision: "vendored-source"
+category: foundation
+update_policy: frozen
+source:
+  provider: vendored-source
+  url: "https://github.com/cameron314/concurrentqueue"
+license:
+  name: "BSD-2-Clause"
+  file: "include/concurrentqueue/concurrentqueue.h"
+triplets:
+  - x64-windows
+crt_linkage: dynamic
+features: []
+dependencies: []
+artifacts: []
+notes:
+  - "Header-only package migrated from libs/concurrentqueue."

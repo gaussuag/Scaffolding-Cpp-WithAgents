@@ -1,0 +1,22 @@
+name: googletest
+display_name: GoogleTest
+version: "1.17.0"
+revision: "vendored-source"
+category: foundation
+update_policy: frozen
+source:
+  provider: vendored-source
+  url: "https://github.com/google/googletest"
+license:
+  name: "BSD-3-Clause"
+  file: "source/LICENSE"
+triplets:
+  - x64-windows
+crt_linkage: dynamic
+features:
+  - gmock
+dependencies: []
+artifacts: []
+notes:
+  - "Source package migrated from libs/googletest."
+  - "Used only when BUILD_TESTING is enabled."

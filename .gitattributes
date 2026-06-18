@@ -1,2 +1,10 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Frozen third-party binary artifacts are allowed in third_party and should use Git LFS.
+third_party/**/*.lib filter=lfs diff=lfs merge=lfs -text
+third_party/**/*.dll filter=lfs diff=lfs merge=lfs -text
+third_party/**/*.exe filter=lfs diff=lfs merge=lfs -text
+third_party/**/*.pdb filter=lfs diff=lfs merge=lfs -text
+third_party/**/*.exp filter=lfs diff=lfs merge=lfs -text
+third_party/**/*.a filter=lfs diff=lfs merge=lfs -text

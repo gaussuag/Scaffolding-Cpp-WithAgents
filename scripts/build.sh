@@ -1,8 +1,9 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 BUILD_DIR="build"
+CONFIG="Debug"
 
 clean() {
     if [ -d "$BUILD_DIR" ]; then
@@ -12,17 +13,14 @@ clean() {
 }
 
 configure() {
-    if [ ! -d "$BUILD_DIR" ]; then
-        mkdir -p "$BUILD_DIR"
-    fi
     cmake -S . -B "$BUILD_DIR"
 }
 
 build() {
-    cmake --build "$BUILD_DIR" --config Debug
+    cmake --build "$BUILD_DIR" --config "$CONFIG"
 }
 
-test() {
+test_project() {
     ctest --test-dir "$BUILD_DIR" --output-on-failure
 }
 
@@ -34,7 +32,7 @@ case "${1:-build}" in
         configure
         ;;
     test)
-        test
+        test_project
         ;;
     build)
         configure
@@ -43,7 +41,7 @@ case "${1:-build}" in
     all)
         configure
         build
-        test
+        test_project
         ;;
     *)
         echo "Usage: $0 {clean|configure|build|test|all}"

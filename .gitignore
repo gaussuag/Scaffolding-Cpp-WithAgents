@@ -12,6 +12,14 @@ out/
 *.ilk
 *.exp
 
+# Frozen third-party artifacts are intentionally versioned under third_party.
+!third_party/**/*.exe
+!third_party/**/*.dll
+!third_party/**/*.a
+!third_party/**/*.lib
+!third_party/**/*.pdb
+!third_party/**/*.exp
+
 .vs/
 .vscode/
 .idea/
